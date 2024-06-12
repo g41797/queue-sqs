@@ -21,7 +21,9 @@ date
 pip install awscli-local
 awslocal help
 date
+echo Create Queue
 awslocal sqs create-queue --queue-name localstack-queue
+echo List Queues
 awslocal sqs list-queues
 date
 
