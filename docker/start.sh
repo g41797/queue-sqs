@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
-docker run -itd \
--p 6650:6650 \
--p 8080:8080 \
---mount source=pulsardata,target=/pulsar/data \
---mount source=pulsarconf,target=/pulsar/conf \
-apachepulsar/pulsar:3.2.3 \
-bin/pulsar standalone
-
-echo "-- Wait for Pulsar service to be ready"
-until curl http://localhost:8080/metrics > /dev/null 2>&1 ; do sleep 1; done
-echo "-- Pulsar service is ready"
+curl -Lo localstack-cli-3.4.0-linux-amd64-onefile.tar.gz \
+    https://github.com/localstack/localstack-cli/releases/download/v3.4.0/localstack-cli-3.4.0-linux-amd64-onefile.tar.gz
+sudo tar xvzf localstack-cli-3.4.0-linux-*-onefile.tar.gz -C /usr/local/bin
+localstack --version

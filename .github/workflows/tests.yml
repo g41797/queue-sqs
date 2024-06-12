@@ -7,16 +7,5 @@ jobs:
       matrix:
         php: ["8.2", "8.3"]
     steps:
-      - uses: actions/checkout@v3
-
       - run: bash docker/start.sh
 
-      - uses: shivammathur/setup-php@v2
-        with:
-         php-version: ${{ matrix.php }}
-
-      - uses: php-actions/composer@v6
-        with:
-          php_version: ${{ matrix.php }}
-
-      - run: vendor/bin/phpunit --testsuite Tests

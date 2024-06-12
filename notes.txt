@@ -1,70 +1,53 @@
-Pulsar
-    https://pulsar.apache.org/
+Emulator
+https://docs.localstack.cloud/overview/
 
-Pulsar as a message queue
-    https://pulsar.apache.org/docs/next/cookbooks-message-queue/
+LocalStack installation
+https://docs.localstack.cloud/getting-started/installation/
 
-PHP client
-    https://github.com/ikilobyte/pulsar-client-php
+LocalStack SQS
+https://docs.localstack.cloud/user-guide/aws/sqs/
 
-Go client
-    https://github.com/apache/pulsar-client-go
+Using LocalStack with Docker Compose
+https://whattodevnow.medium.com/using-localstack-with-docker-compose-to-mock-aws-services-bb25a5b01d4b
 
-Pulsar vs Kafka
-    https://dzone.com/articles/a-deep-dive-into-the-differences-between-kafka-and
-    https://www.linkedin.com/pulse/key-differences-kafka-vs-pulsar-ashwani-kumar-oqvif
-    https://www.jesse-anderson.com/2021/09/keeping-things-stupidly-simple-with-pulsar-and-kafka/
-    https://www.geeksforgeeks.org/apache-kafka-vs-apache-pulsar/
-    https://kunalkkg.medium.com/the-battle-of-message-queues-apache-kafka-vs-apache-pulsar-102a6100b023
 
-How Apache Pulsar Works
-    https://jack-vanlightly.com/blog/2018/10/2/understanding-how-apache-pulsar-works
+Use wait-for-it.sh with LocalStack
+https://github.com/localstack/localstack/issues/732#issuecomment-1438774446
 
-Unified Queueing
-    https://thenewstack.io/apache-pulsar-a-unified-queueing-and-streaming-platform/
+LocalStack stuck
+https://stackoverflow.com/questions/69271940/localstack-stuck-in-waiting-for-all-localstack-services-to-be-ready-messages
 
-Work queue
-    https://medium.com/skills-matter/creating-work-queues-with-apache-kafka-and-apache-pulsar-9f1864516e41
+PHP SDK
+https://docs.aws.amazon.com/sdk-for-php/
 
-Task Queues
-    https://taskqueues.com/
+SQS overview
+https://aws.amazon.com/documentation-overview/sqs/
 
-Functiona workers
-    https://pulsar.apache.org/docs/3.2.x/functions-package-go/
+Amazon Simple Queue Service Documentation
+https://docs.aws.amazon.com/sqs/
 
-Go Functions
-    https://pulsar.apache.org/docs/3.2.x/functions-package-go/
+Lambda examples using SDK for PHP
+https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/php_lambda_code_examples.html
 
-Docker-compose
-    https://github.com/apache/pulsar/tree/master/docker-compose/kitchen-sink
+Serverless Queues for Laravel on AWS Lambda (SQS)
+https://github.com/christoph-kluge/bref-sqs-laravel
 
-CLI tools
-    https://apache-pulsar.slack.com/archives/C5Z4T36F7/p1716626334232199
+Serverless Snippets
+https://github.com/aws-samples/serverless-snippets
 
-Pulsar Shell
-    https://pulsar.apache.org/docs/3.2.x/administration-pulsar-shell/
-    https://pulsar.apache.org/download/#shell
+Using Lambda with Amazon SQS
+https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html
 
-Questions tagged [apache-pulsar]
-    https://stackoverflow.com/tags/apache-pulsar
+Amazon SQS Transport
+https://github.com/php-enqueue/sqs
 
-Pulsar Clients
-    https://pulsar.apache.org/docs/3.2.x/concepts-clients/
+sqs-simple (PHP)
+https://github.com/tedicela/sqs-simple
 
-Start Pulsar
-    cd ./docker
+Bref SQS asynchronous tasks
+https://bref.sh/docs/use-cases/sqs
 
-    TODO how to stop/remove already running pulsar
-
-    bash ./start.sh
-
-Check main Pulsar port
-    sudo netstat --tcp --listening --programs --numeric | grep 6650
-
-Zero value of ReceiverQueueSize
-    https://github.com/ikilobyte/pulsar-client-php/issues/26
-    https://github.com/apache/pulsar-client-go/issues/1223
-    https://github.com/apache/pulsar-client-go/pull/1225
-
+Symfony Hello world with SQS
+https://github.com/brefphp/examples/tree/master/Symfony/sqs
 
 
