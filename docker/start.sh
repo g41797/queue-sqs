@@ -8,7 +8,7 @@ sudo tar xvzf localstack-cli-3.4.0-linux-*-onefile.tar.gz -C /usr/local/bin
 localstack --version
 date
 export LOCALSTACK_AUTH_TOKEN="ls-cIpo9773-Vaku-guFE-1697-DaBUyEwu01b9"
-export LOCALSTACK_SERVICEES="SQS"
+export LOCALSTACK_SERVICEES="sqs"
 export LOCALSTACK_SQS_ENDPOINT_STRATEGY="path"
 localstack start -d
 date
@@ -20,10 +20,9 @@ date
 # aws --version
 date
 pip install awscli-local
-awslocal help
 date
 echo Create Queue
-awslocal sqs create-queue --queue-name localstack-queue
+awslocal sqs create-queue --queue-name yii-queue
 echo List Queues
 awslocal sqs list-queues
 date
