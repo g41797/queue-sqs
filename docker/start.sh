@@ -9,6 +9,7 @@ localstack --version
 date
 export LOCALSTACK_AUTH_TOKEN="ls-cIpo9773-Vaku-guFE-1697-DaBUyEwu01b9"
 export LOCALSTACK_SERVICEES="SQS"
+export LOCALSTACK_SQS_ENDPOINT_STRATEGY="path"
 localstack start -d
 date
 # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
