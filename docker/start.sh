@@ -3,3 +3,18 @@ curl -Lo localstack-cli-3.4.0-linux-amd64-onefile.tar.gz \
     https://github.com/localstack/localstack-cli/releases/download/v3.4.0/localstack-cli-3.4.0-linux-amd64-onefile.tar.gz
 sudo tar xvzf localstack-cli-3.4.0-linux-*-onefile.tar.gz -C /usr/local/bin
 localstack --version
+export LOCALSTACK_AUTH_TOKEN="ls-cIpo9773-Vaku-guFE-1697-DaBUyEwu01b9"
+export LOCALSTACK_SERVICEES="SQS"
+localstack start -d
+sudo apt install python3-pip
+
+# curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+# unzip awscliv2.zip
+# sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+# which aws
+# ls -l /usr/local/bin/aws
+# aws --version
+
+pip install awscli-local
+awslocal help
+
