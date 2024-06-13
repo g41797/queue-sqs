@@ -10,7 +10,6 @@ https://docs.localstack.cloud/user-guide/aws/sqs/
 Using LocalStack with Docker Compose
 https://whattodevnow.medium.com/using-localstack-with-docker-compose-to-mock-aws-services-bb25a5b01d4b
 
-
 Use wait-for-it.sh with LocalStack
 https://github.com/localstack/localstack/issues/732#issuecomment-1438774446
 
@@ -20,11 +19,20 @@ https://stackoverflow.com/questions/69271940/localstack-stuck-in-waiting-for-all
 PHP SDK
 https://docs.aws.amazon.com/sdk-for-php/
 
+SQS code examples
+https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/php/example_code/sqs
+
 SQS overview
 https://aws.amazon.com/documentation-overview/sqs/
 
 Amazon Simple Queue Service Documentation
 https://docs.aws.amazon.com/sqs/
+
+AWS Cli create queue
+https://awscli.amazonaws.com/v2/documentation/api/latest/reference/sqs/create-queue.html
+
+FIFO queue delivery logic in Amazon SQS
+https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-understanding-logic.html
 
 Lambda examples using SDK for PHP
 https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/php_lambda_code_examples.html
