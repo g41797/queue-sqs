@@ -30,10 +30,7 @@ abstract class FunctionalTestCase extends TestCase
     }
     public function clean(): void
     {
-        $url = self::defaultUrl();
-        $topic = self::defaultTopic();
-
-        $this->assertGreaterThanOrEqual(0, (new Receiver($url, $topic, receiveQueueSize: 10000))->clean());
+        $this->assertTrue(SnippetsTest::purgeQueues());
     }
     static public function defaultJob(): MessageInterface
     {
