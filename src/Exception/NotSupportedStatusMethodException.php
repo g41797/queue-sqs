@@ -1,6 +1,6 @@
 <?php
 
-namespace G41797\Queue\Pulsar\Exception;
+namespace G41797\Queue\Sqs\Exception;
 
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 

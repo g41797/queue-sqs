@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar;
+namespace G41797\Queue\Sqs;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -11,13 +11,12 @@ use Yiisoft\Queue\Adapter\AdapterInterface;
 use Yiisoft\Queue\Cli\LoopInterface;
 use Yiisoft\Queue\Enum\JobStatus;
 use Yiisoft\Queue\Message\MessageInterface;
-use Yiisoft\Queue\QueueFactoryInterface;
 
-use G41797\Queue\Pulsar\Exception\NotSupportedStatusMethodException;
+use G41797\Queue\Sqs\Exception\NotSupportedStatusMethodException;
 
 class Adapter implements AdapterInterface
 {
-    public const DEFAULT_CHANNEL_NAME = 'public/default/yii-queue';
+    public const DEFAULT_CHANNEL_NAME = 'yii-queue';
 
     private BrokerFactoryInterface $brokerFactory;
 

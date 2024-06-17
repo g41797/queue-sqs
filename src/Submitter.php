@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar;
+namespace G41797\Queue\Sqs;
 
 use Ramsey\Uuid\Uuid;
 
@@ -10,28 +10,18 @@ use Yiisoft\Queue\Message\IdEnvelope;
 use Yiisoft\Queue\Message\JsonMessageSerializer;
 use Yiisoft\Queue\Message\MessageInterface;
 
-use Pulsar\Producer;
-use Pulsar\ProducerOptions;
-use Pulsar\MessageOptions;
+use Interop\Queue\Context;
+
+use Enqueue\Sqs\SqsProducer as Producer;
 
 class Submitter
 {
-    static public function default(): Submitter
-    {
-        return new Submitter
-        (
-            'pulsar://localhost:6650',
-            Broker::channelToTopic(Adapter::DEFAULT_CHANNEL_NAME)
-        );
-    }
-
     private JsonMessageSerializer $serializer;
 
     private ?Producer $producer = null;
 
     public function __construct(
-        private readonly string $url,
-        private readonly string $topic
+        private Context $context
     ) {
         $this->serializer = new JsonMessageSerializer();
     }

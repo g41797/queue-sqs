@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar;
+namespace G41797\Queue\Sqs;
 
 use Psr\Log\LoggerInterface;
-use G41797\Queue\Pulsar\Configuration as BrokerConfiguration;
-use Yiisoft\Queue\QueueFactoryInterface;
+use G41797\Queue\Sqs\Configuration as BrokerConfiguration;
 
 class BrokerFactory implements BrokerFactoryInterface
 {
@@ -18,7 +17,7 @@ class BrokerFactory implements BrokerFactoryInterface
                         ): ?BrokerInterface {
         return new Broker(
             $channel,
-             BrokerConfiguration::default()->update($config),
+            new BrokerConfiguration($config),
             $logger
         );
     }

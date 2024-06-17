@@ -32,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "G41797\\Queue\\Pulsar\\": "src/"
+            "G41797\\Queue\\Sqs\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "G41797\\Queue\\Pulsar\\": "tests/"
+            "G41797\\Queue\\Sqs\\": "tests/"
         }
     },
     "extra": {

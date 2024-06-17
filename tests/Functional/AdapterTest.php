@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar\Functional;
+namespace G41797\Queue\Sqs\Functional;
 
-use G41797\Queue\Pulsar\Adapter;
-use G41797\Queue\Pulsar\BrokerFactory;
-use G41797\Queue\Pulsar\BrokerFactoryInterface;
-use G41797\Queue\Pulsar\CheckMessageHandler;
-use G41797\Queue\Pulsar\NullLoop;
+use G41797\Queue\Sqs\Adapter;
+use G41797\Queue\Sqs\BrokerFactory;
+use G41797\Queue\Sqs\BrokerFactoryInterface;
+use G41797\Queue\Sqs\CheckMessageHandler;
+use G41797\Queue\Sqs\NullLoop;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Yiisoft\Queue\Adapter\AdapterInterface;

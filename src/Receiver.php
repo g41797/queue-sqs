@@ -1,13 +1,11 @@
 <?php
 
-namespace G41797\Queue\Pulsar;
+namespace G41797\Queue\Sqs;
 
-use G41797\Queue\Pulsar\Exception\NotConnectedPulsarException;
-use Pulsar\Consumer;
-use Pulsar\ConsumerOptions;
-use Pulsar\Exception\MessageNotFound;
-use Pulsar\Message;
-use Pulsar\SubscriptionType;
+use G41797\Queue\Sqs\Exception\NotConnectedSqsException;
+
+use Interop\Queue\Context;
+
 use Yiisoft\Queue\Message\IdEnvelope;
 use Yiisoft\Queue\Message\JsonMessageSerializer;
 
@@ -17,9 +15,7 @@ class Receiver
     private JsonMessageSerializer $serializer;
 
     public function __construct(
-        private readonly string $url,
-        private readonly string $topic,
-        private readonly int    $receiveQueueSize   = 1,
+        private Context $context
     ) {
         $this->serializer = new JsonMessageSerializer();
     }
@@ -41,7 +37,7 @@ class Receiver
     public function receiveRaw(float $timeoutSec = 2.0): ?Message
     {
         if (!$this->isConnected()) {
-            throw new NotConnectedPulsarException();
+            throw new NotConnectedSqsException();
         }
 
         $finish = microtime(true) + $timeoutSec;

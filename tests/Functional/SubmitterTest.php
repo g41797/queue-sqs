@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar\Functional;
+namespace G41797\Queue\Sqs\Functional;
 
-use G41797\Queue\Pulsar\Adapter;
-use G41797\Queue\Pulsar\Broker;
-use G41797\Queue\Pulsar\Receiver;
-use G41797\Queue\Pulsar\Submitter;
+use G41797\Queue\Sqs\Adapter;
+use G41797\Queue\Sqs\Broker;
+use G41797\Queue\Sqs\Receiver;
+use G41797\Queue\Sqs\Submitter;
 
 class SubmitterTest extends FunctionalTestCase
 {

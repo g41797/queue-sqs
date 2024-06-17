@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar\Functional;
+namespace G41797\Queue\Sqs\Functional;
 
-use PHPUnit\Framework\TestCase;
+use G41797\Queue\Sqs\Broker;
+
 use Aws\Exception\AwsException;
 use Aws\Sqs\SqsClient;
 use Aws\Result;
 
 class SnippetsTest extends FunctionalTestCase
 {
-
-
     public function testListQueues(): void
     {
         $listQueues = self::listQueues();
@@ -30,7 +29,7 @@ class SnippetsTest extends FunctionalTestCase
             'region' => 'us-east-1',
             'version' => 'latest',
             'use_path_style_endpoint' => true,
-            'endpoint' => 'http://localhost.localstack.cloud:4566',
+            'endpoint' => Broker::defaultEndpoint(),
         ]);
     }
 
@@ -72,5 +71,4 @@ class SnippetsTest extends FunctionalTestCase
             return false;
         }
     }
-
 }

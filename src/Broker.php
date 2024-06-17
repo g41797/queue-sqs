@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar;
+namespace G41797\Queue\Sqs;
 
-use G41797\Queue\Pulsar\Exception\NotSupportedStatusMethodException;
-
+use G41797\Queue\Sqs\Exception\NotConnectedSqsException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -13,43 +12,37 @@ use Yiisoft\Queue\Enum\JobStatus;
 use Yiisoft\Queue\Message\IdEnvelope;
 use Yiisoft\Queue\Message\MessageInterface;
 
-use G41797\Queue\Pulsar\Configuration as BrokerConfiguration;
+use Interop\Queue\Context;
+use Enqueue\Sqs\SqsConnectionFactory;
+
+use G41797\Queue\Sqs\Configuration as BrokerConfiguration;
+use G41797\Queue\Sqs\Exception\NotSupportedStatusMethodException;
 
 
 class Broker implements BrokerInterface
 {
     public const SUBSCRIPTION_NAME = 'jobs';
 
-    public const CONSUMER_NAME = 'worker';
-
-    public const PRODUCER_NAME = 'submitter';
-
-    public array $statusString =
-        [
-            JobStatus::WAITING => 'WAITING',
-            JobStatus::RESERVED => 'RESERVED',
-            JobStatus::DONE => 'DONE'
-        ];
-
-    private string $topic;
-    private string $url;
+    public string $channelName;
 
     public function __construct(
-        string                          $channelName = Adapter::DEFAULT_CHANNEL_NAME,
-        private ?BrokerConfiguration    $configuration = null,
-        private ?LoggerInterface        $logger = null
+        string                         $channelName = Adapter::DEFAULT_CHANNEL_NAME,
+        public ?BrokerConfiguration    $configuration = null,
+        public ?LoggerInterface        $logger = null
     ) {
         if (empty($channelName)) {
-            $channelName = Adapter::DEFAULT_CHANNEL_NAME;
+            $this->$channelName = Adapter::DEFAULT_CHANNEL_NAME;
         }
-
-        $this->topic = self::channelToTopic($channelName);
 
         if (null == $configuration) {
-            $this->configuration = BrokerConfiguration::default();
+            $this->configuration = new BrokerConfiguration();
         }
 
-        $this->url = $this->configuration->url();
+        $endpoint = self::defaultEndpoint();
+
+        if (isset($endpoint)) {
+            $this->configuration->update(['endpoint' => $endpoint]);
+        }
 
         if (null == $logger) {
             $this->logger = new NullLogger();
@@ -70,9 +63,11 @@ class Broker implements BrokerInterface
 
     public function push(MessageInterface $job): ?IdEnvelope
     {
+        $this->prepare();
+
         if ($this->submitter == null)
         {
-            $this->submitter = new Submitter($this->url, $this->topic);
+            $this->submitter = new Submitter($this->context);
         }
 
         $env = $this->submitter->submit($job);
@@ -96,9 +91,11 @@ class Broker implements BrokerInterface
 
     public function pull(float $timeout): ?IdEnvelope
     {
+        $this->prepare();
+
         if ($this->receiver == null)
         {
-            $this->receiver = new Receiver($this->url, $this->topic);
+            $this->receiver = new Receiver($this->context);
         }
 
         try {
@@ -122,18 +119,47 @@ class Broker implements BrokerInterface
     {
     }
 
-    static public function stringToJobStatus(string $status): ?JobStatus
+    public ?Context    $context = null;
+
+    private function prepare(): void
     {
-        return match ($status) {
-            'WAITING' => JobStatus::waiting(),
-            'RESERVED' => JobStatus::reserved(),
-            'DONE' => JobStatus::done(),
-            default => null,
-        };
+        try
+        {
+            $this->init();
+            return;
+        }
+        catch (\Exception $exc) {
+            throw new NotConnectedSqsException();
+        }
     }
 
-    static public function channelToTopic(string $channel): string
+    private function init(): void
     {
-       return 'persistent://'.$channel;
+        if ($this->context !== null)
+        {
+            return;
+        }
+
+        $context = (new SqsConnectionFactory($this->configuration->raw()))->createContext();
+
+        $queue = $context->createQueue($this->channelName.'.fifo');
+
+        $queue->setFifoQueue(true);
+        $queue->setReceiveMessageWaitTimeSeconds(20);
+        $queue->setContentBasedDeduplication(true);
+
+        $context->declareQueue($queue);
+
+        $context->getQueueUrl($queue); // throws exception for failure
+
+        $this->context = $context;
+
+        return;
     }
+
+    static public function defaultEndpoint(): string|null
+    {
+        return $_ENV['ENDPOINT'];
+    }
+
 }

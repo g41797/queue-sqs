@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar\Functional;
+namespace G41797\Queue\Sqs\Functional;
 
-use G41797\Queue\Pulsar\Adapter;
-use G41797\Queue\Pulsar\Broker;
-use G41797\Queue\Pulsar\Configuration;
-use G41797\Queue\Pulsar\Receiver;
 use PHPUnit\Framework\TestCase;
-use RdKafka\Conf;
+
 use Yiisoft\Queue\Message\Message;
 use Yiisoft\Queue\Message\MessageInterface;
+
+use G41797\Queue\Sqs\Adapter;
+use G41797\Queue\Sqs\Broker;
+use G41797\Queue\Sqs\Configuration;
 
 
 abstract class FunctionalTestCase extends TestCase
@@ -35,15 +35,5 @@ abstract class FunctionalTestCase extends TestCase
     static public function defaultJob(): MessageInterface
     {
         return new Message('jobhandler', 'jobdata', metadata: []);
-    }
-
-    static public function defaultUrl(): string
-    {
-        return Configuration::default()->url();
-    }
-
-    static public function defaultTopic(): string
-    {
-        return Broker::channelToTopic(Adapter::DEFAULT_CHANNEL_NAME);
     }
 }

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar;
+namespace G41797\Queue\Sqs;
 
 use Psr\Log\LoggerInterface;
-use Yiisoft\Queue\QueueFactoryInterface;
 
 interface BrokerFactoryInterface
 {

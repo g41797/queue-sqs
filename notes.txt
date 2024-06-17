@@ -58,6 +58,9 @@ https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-f
 FIFO queue delivery logic in Amazon SQS
 https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-understanding-logic.html
 
+Consuming messages using long polling
+https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html#sqs-long-polling
+
 AWS service endpoints
 https://docs.aws.amazon.com/general/latest/gr/rande.html
 
@@ -88,3 +91,10 @@ https://github.com/brefphp/examples/tree/master/Symfony/sqs
 
 Configuration from options array
 https://github.com/basis-company/nats.php/blob/main/src/Configuration.php
+
+AWS SNS vs SQS
+https://ably.com/topic/aws-sns-vs-sqs
+
+PHPUnit : How to force an environment variable in Unit Test ?
+https://www.sudhanshubajaj.com/phpunit-how-to-force-an-environment-variable-in-unit-test/
+

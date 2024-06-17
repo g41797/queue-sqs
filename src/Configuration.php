@@ -2,38 +2,40 @@
 
 declare(strict_types=1);
 
-namespace G41797\Queue\Pulsar;
+namespace G41797\Queue\Sqs;
 
 final class Configuration
 {
+    private array $config = [];
+
     public function __construct(
-        public string   $host = 'localhost',
-        public int      $port = 6650
+        array $config = []
     ) {
-        return;
+        $this->config = array_replace(self::default(), $config);
     }
 
     public function update(array $config): self
     {
-        if (array_key_exists('host', $config))
-        {
-            $this->host = $config['host'];
-        }
-
-        if (array_key_exists('port', $config))
-        {
-            $this->port = $config['port'];
-        }
-
+        $this->config = array_replace($this->config, $config);
         return $this;
     }
 
-    public function url(): string
+    public function raw(): array
     {
-        return 'pulsar://' . $this->host . ':' . $this->port;
+        return $this->config;
     }
 
-    static public function default(): self {
-        return new self();
+    static public function default(): array
+    {
+        return [
+            'key' => null,
+            'secret' => null,
+            'token' => null,
+            'region' => 'us-east-1',
+            'retries' => 3,
+            'version' => 'latest',
+            'profile' => null,
+            'queue_owner_aws_account_id' => null
+        ];
     }
 }
