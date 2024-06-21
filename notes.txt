@@ -13,8 +13,14 @@ https://whattodevnow.medium.com/using-localstack-with-docker-compose-to-mock-aws
 Use wait-for-it.sh with LocalStack
 https://github.com/localstack/localstack/issues/732#issuecomment-1438774446
 
-LocalStack stuck
-https://stackoverflow.com/questions/69271940/localstack-stuck-in-waiting-for-all-localstack-services-to-be-ready-messages
+How to fake AWS locally with LocalStack
+https://dev.to/goodidea/how-to-fake-aws-locally-with-localstack-27me
+
+Local Key Management Service (KMS)
+https://docs.localstack.cloud/user-guide/aws/kms/
+
+Local Secrets Manager
+https://docs.localstack.cloud/user-guide/aws/secretsmanager/
 
 AWS CLI v2
 https://docs.aws.amazon.com/cli/latest/reference/

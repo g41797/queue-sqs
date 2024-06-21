@@ -30,19 +30,18 @@ class Broker implements BrokerInterface
 {
     public const SUBSCRIPTION_NAME = 'jobs';
 
-    private string $channelName;
+    private string $queueName;
+
     private JsonMessageSerializer $serializer;
 
     public function __construct(
-        string                         $channelName = Adapter::DEFAULT_CHANNEL_NAME,
+        private string                 $channelName = Adapter::DEFAULT_CHANNEL_NAME,
         public ?BrokerConfiguration    $configuration = null,
         public ?LoggerInterface        $logger = null
     ) {
         $this->serializer = new JsonMessageSerializer();
 
-        if (empty($channelName)) {
-            $this->channelName = Adapter::DEFAULT_CHANNEL_NAME;
-        }
+        $this->queueName = $this->channelName . '.fifo';
 
         if (null == $configuration) {
             $this->configuration = new BrokerConfiguration();
@@ -57,8 +56,14 @@ class Broker implements BrokerInterface
         if (null == $logger) {
             $this->logger = new NullLogger();
         }
+
+        return;
     }
 
+    static public function default(): Broker
+    {
+        return new Broker();
+    }
 
     public function withChannel(string $channel): BrokerInterface
     {
@@ -113,7 +118,6 @@ class Broker implements BrokerInterface
         throw new NotSupportedStatusMethodException();
     }
 
-
     private ?SqsConsumer $receiver = null;
 
     public function pull(float $timeout): ?IdEnvelope
@@ -142,6 +146,23 @@ class Broker implements BrokerInterface
             $this->receiver = null;
             return null;
         }
+    }
+    public function clean(): int
+    {
+        $count = 0;
+
+        while (true)
+        {
+            $recv = $this->pull(1.0);
+            if ($recv == null)
+            {
+                break;
+            }
+
+            $count += 1;
+        }
+
+        return $count;
     }
 
     public function done(string $id): bool
@@ -174,7 +195,7 @@ class Broker implements BrokerInterface
 
         $sqs = (new SqsConnectionFactory($this->configuration->raw()))->createContext();
 
-        $this->queue = $sqs->createQueue($this->channelName.'.fifo');
+        $this->queue = $sqs->createQueue($this->queueName);
 
         $this->queue->setFifoQueue(true);
         $this->queue->setReceiveMessageWaitTimeSeconds(20);
@@ -183,7 +204,7 @@ class Broker implements BrokerInterface
         $sqs->declareQueue($this->queue);
 
         $this->queueUrl = $sqs->getQueueUrl($this->queue); // throws exception for failure
-        $this->$sqs     = $sqs;
+        $this->sqs      = $sqs;
 
         return;
     }

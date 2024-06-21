@@ -6,8 +6,7 @@ namespace G41797\Queue\Sqs\Functional;
 
 use G41797\Queue\Sqs\Adapter;
 use G41797\Queue\Sqs\Broker;
-use G41797\Queue\Sqs\Receiver;
-use G41797\Queue\Sqs\Submitter;
+use G41797\Queue\Sqs\Configuration;
 
 class SubmitterTest extends FunctionalTestCase
 {
@@ -20,28 +19,40 @@ class SubmitterTest extends FunctionalTestCase
     public function testSubmit(): void
     {
         $count = 10;
+
         $this->assertEquals($count, count($this->submitJobs($count)));
 
-        $url = self::defaultUrl();
-        $topic = self::defaultTopic();
-
-        $this->assertEquals($count, (new Receiver($url, $topic, receiveQueueSize: 1))->clean());
+        $this->assertEquals($count, self::testBroker()->clean());
     }
 
     private function submitJobs(int $count): array
     {
         $submitted = [];
+        $submitter = self::testBroker();
 
         for ($i = 0; $i < $count; $i++) {
-            $submitter = Submitter::default();
             $job = self::defaultJob();
-            $env = $submitter->submit($job);
+            $env = $submitter->push($job);
             if ($env == null) {
                 break;
             }
             $submitted[] = $env;
         }
         return $submitted;
+    }
+
+    static public function testBroker(): Broker
+    {
+        return new Broker(channelName:'testQueue', configuration: self::testConfig());
+    }
+
+
+    static public function testConfig(): Configuration
+    {
+        return new Configuration([
+            'key' => 'anyKey',
+            'secret' => 'noSecrets',
+        ]);
     }
 
 }
