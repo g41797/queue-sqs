@@ -4,31 +4,20 @@ declare(strict_types=1);
 
 namespace G41797\Queue\Sqs\Functional;
 
-use G41797\Queue\Sqs\Adapter;
-use G41797\Queue\Sqs\BrokerFactory;
-use G41797\Queue\Sqs\BrokerFactoryInterface;
-use G41797\Queue\Sqs\CheckMessageHandler;
-use G41797\Queue\Sqs\NullLoop;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+
 use Yiisoft\Queue\Adapter\AdapterInterface;
 use Yiisoft\Queue\Message\IdEnvelope;
 use Yiisoft\Queue\Message\Message;
 use Yiisoft\Queue\Message\MessageInterface;
 
+use G41797\Queue\Sqs\Adapter;
+use G41797\Queue\Sqs\CheckMessageHandler;
+use G41797\Queue\Sqs\NullLoop;
 
 class AdapterTest extends FunctionalTestCase
 {
-
-    private ?BrokerFactoryInterface $brokerFactory = null;
-
-    private function getBrokerFactory(): BrokerFactoryInterface
-    {
-        if ($this->brokerFactory == null) {
-            $this->brokerFactory = new BrokerFactory();
-        }
-        return $this->brokerFactory;
-    }
 
     private ?LoggerInterface $logger = null;
     private function getLogger(): LoggerInterface
@@ -66,16 +55,14 @@ class AdapterTest extends FunctionalTestCase
     }
 
     protected function createSubmitter() : AdapterInterface {
-        $factory = $this->getBrokerFactory();
         $logger = $this->getLogger();
-        return new Adapter(logger: $logger);
+        return new Adapter(brokerConfiguration: SubmitterTest::testConfigArray(), logger: $logger);
     }
 
     protected function createWorker() : AdapterInterface {
-        $factory = $this->getBrokerFactory();
         $logger = $this->getLogger();
         $loop = $this->getLoop();
-        return new Adapter(logger: $logger, loop: $loop, timeoutSec: 3.0);
+        return new Adapter(brokerConfiguration: SubmitterTest::testConfigArray(),logger: $logger, loop: $loop, timeoutSec: 3.0);
     }
 
     static function getJob(): MessageInterface {

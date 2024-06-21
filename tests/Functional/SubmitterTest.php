@@ -49,10 +49,14 @@ class SubmitterTest extends FunctionalTestCase
 
     static public function testConfig(): Configuration
     {
-        return new Configuration([
+        return new Configuration(self::testConfigArray());
+    }
+    static public function testConfigArray(): array
+    {
+        return [
             'key' => 'anyKey',
             'secret' => 'noSecrets',
-        ]);
+        ];
     }
 
 }

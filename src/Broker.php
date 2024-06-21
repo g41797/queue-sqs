@@ -102,6 +102,7 @@ class Broker implements BrokerInterface
             $sqsMsg     = $this->sqs->createMessage(body: $payload);
 
             $sqsMsg->setMessageDeduplicationId($jobId);
+            $sqsMsg->setMessageId($jobId);
             $sqsMsg->setMessageGroupId(Broker::SUBSCRIPTION_NAME);
 
             $this->producer->send($this->queue, $sqsMsg);
@@ -136,7 +137,7 @@ class Broker implements BrokerInterface
             if (null == $sqsMsg) { return null;}
 
             $job    = $this->serializer->unserialize($sqsMsg->getBody());
-            $jid    = $sqsMsg->getMessageDeduplicationId();
+            $jid    = $sqsMsg->getMessageId();
 
             $this->receiver->acknowledge($sqsMsg);
 
