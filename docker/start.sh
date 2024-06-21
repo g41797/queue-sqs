@@ -34,7 +34,7 @@ localstack --version
 echo
 echo Start LocalStack
 echo
-export LOCALSTACK_AUTH_TOKEN="LOCALSTACK_AUTH_TOKEN"
+export LOCALSTACK_AUTH_TOKEN="ls-KESiVaLi-4697-7857-MEna-ziqIXeSaf962"
 export LOCALSTACK_SERVICEES="sqs"
 export LOCALSTACK_SQS_ENDPOINT_STRATEGY="path"
 localstack start -d
