@@ -4,34 +4,44 @@ declare(strict_types=1);
 
 namespace G41797\Queue\Sqs;
 
-use G41797\Queue\Sqs\Exception\NotConnectedSqsException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
+use Ramsey\Uuid\Uuid;
+
 use Yiisoft\Queue\Enum\JobStatus;
 use Yiisoft\Queue\Message\IdEnvelope;
+use Yiisoft\Queue\Message\JsonMessageSerializer;
 use Yiisoft\Queue\Message\MessageInterface;
 
-use Interop\Queue\Context;
+use Interop\Queue\Producer;
+
+use Enqueue\Sqs\SqsContext;
+use Enqueue\Sqs\SqsConsumer;
 use Enqueue\Sqs\SqsConnectionFactory;
+use Enqueue\Sqs\SqsDestination;
 
 use G41797\Queue\Sqs\Configuration as BrokerConfiguration;
 use G41797\Queue\Sqs\Exception\NotSupportedStatusMethodException;
+use G41797\Queue\Sqs\Exception\NotConnectedSqsException;
 
 
 class Broker implements BrokerInterface
 {
     public const SUBSCRIPTION_NAME = 'jobs';
 
-    public string $channelName;
+    private string $channelName;
+    private JsonMessageSerializer $serializer;
 
     public function __construct(
         string                         $channelName = Adapter::DEFAULT_CHANNEL_NAME,
         public ?BrokerConfiguration    $configuration = null,
         public ?LoggerInterface        $logger = null
     ) {
+        $this->serializer = new JsonMessageSerializer();
+
         if (empty($channelName)) {
-            $this->$channelName = Adapter::DEFAULT_CHANNEL_NAME;
+            $this->channelName = Adapter::DEFAULT_CHANNEL_NAME;
         }
 
         if (null == $configuration) {
@@ -59,26 +69,43 @@ class Broker implements BrokerInterface
         return new self($channel, $this->configuration, $this->logger);
     }
 
-    private ?Submitter $submitter = null;
-
+    private ?Producer $producer = null;
     public function push(MessageInterface $job): ?IdEnvelope
     {
         $this->prepare();
 
-        if ($this->submitter == null)
-        {
-            $this->submitter = new Submitter($this->context);
+        if ($this->producer == null) {
+            $this->producer = $this->sqs->createProducer();
         }
 
-        $env = $this->submitter->submit($job);
+        $env = $this->submit($job);
 
         if ($env == null)
         {
-            $this->submitter->disconnect();
-            $this->submitter = null;
+            $this->producer = null;
         }
 
         return $env;
+    }
+
+    private function submit(MessageInterface $job): ?IdEnvelope
+    {
+        try {
+            $jobId      = Uuid::uuid7()->toString();
+            $payload    = $this->serializer->serialize($job);
+
+            $sqsMsg     = $this->sqs->createMessage(body: $payload);
+
+            $sqsMsg->setMessageDeduplicationId($jobId);
+            $sqsMsg->setMessageGroupId(Broker::SUBSCRIPTION_NAME);
+
+            $this->producer->send($this->queue, $sqsMsg);
+
+            return new IdEnvelope($job, $jobId);
+        }
+        catch (\Throwable ) {
+            return null;
+        }
     }
 
     public function jobStatus(string $id): ?JobStatus
@@ -87,7 +114,7 @@ class Broker implements BrokerInterface
     }
 
 
-    private ?Receiver $receiver = null;
+    private ?SqsConsumer $receiver = null;
 
     public function pull(float $timeout): ?IdEnvelope
     {
@@ -95,15 +122,23 @@ class Broker implements BrokerInterface
 
         if ($this->receiver == null)
         {
-            $this->receiver = new Receiver($this->context);
+            $this->receiver = $this->sqs->createConsumer($this->queue);
         }
 
-        try {
-            $msg = $this->receiver->receive($timeout);
-            return $msg;
+        try
+        {
+            $sqsMsg = $this->receiver->receive((int)(ceil($timeout*1000.0)));
+
+            if (null == $sqsMsg) { return null;}
+
+            $job    = $this->serializer->unserialize($sqsMsg->getBody());
+            $jid    = $sqsMsg->getMessageDeduplicationId();
+
+            $this->receiver->acknowledge($sqsMsg);
+
+            return new IdEnvelope($job, $jid);
         }
         catch (\Exception $exc) {
-            $this->receiver->disconnect();
             $this->receiver = null;
             return null;
         }
@@ -111,15 +146,12 @@ class Broker implements BrokerInterface
 
     public function done(string $id): bool
     {
-        // For automatic ACK after consuming.
         return !empty($id);
     }
 
-    public function disconnect(): void
-    {
-    }
-
-    public ?Context    $context = null;
+    public ?SqsContext      $sqs    = null;
+    public SqsDestination   $queue;
+    public string       $queueUrl;
 
     private function prepare(): void
     {
@@ -135,24 +167,23 @@ class Broker implements BrokerInterface
 
     private function init(): void
     {
-        if ($this->context !== null)
+        if ($this->sqs !== null)
         {
             return;
         }
 
-        $context = (new SqsConnectionFactory($this->configuration->raw()))->createContext();
+        $sqs = (new SqsConnectionFactory($this->configuration->raw()))->createContext();
 
-        $queue = $context->createQueue($this->channelName.'.fifo');
+        $this->queue = $sqs->createQueue($this->channelName.'.fifo');
 
-        $queue->setFifoQueue(true);
-        $queue->setReceiveMessageWaitTimeSeconds(20);
-        $queue->setContentBasedDeduplication(true);
+        $this->queue->setFifoQueue(true);
+        $this->queue->setReceiveMessageWaitTimeSeconds(20);
+        $this->queue->setContentBasedDeduplication(true);
 
-        $context->declareQueue($queue);
+        $sqs->declareQueue($this->queue);
 
-        $context->getQueueUrl($queue); // throws exception for failure
-
-        $this->context = $context;
+        $this->queueUrl = $sqs->getQueueUrl($this->queue); // throws exception for failure
+        $this->$sqs     = $sqs;
 
         return;
     }
