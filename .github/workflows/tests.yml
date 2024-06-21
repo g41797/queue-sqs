@@ -15,6 +15,10 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
 
+      - run cat /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini
+
+      - run php --ini
+
       - uses: php-actions/composer@v6
 
       - run: bash docker/start.sh
