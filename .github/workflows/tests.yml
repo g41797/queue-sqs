@@ -11,13 +11,17 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - run: bash docker/start.sh
-
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
 
+      - run: docker-php-ext-configure zip
+
+      - run: docker-php-ext-install zip
+
       - uses: php-actions/composer@v6
+
+      - run: bash docker/start.sh
 
       - run: vendor/bin/phpunit --testsuite Tests
 
