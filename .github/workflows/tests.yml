@@ -17,8 +17,6 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
 
-      - run: sudo pecl install zip
-
       - uses: php-actions/composer@v6
 
       - run: vendor/bin/phpunit --testsuite Tests
