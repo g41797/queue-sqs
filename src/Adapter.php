@@ -25,7 +25,7 @@ class Adapter implements AdapterInterface
         private array               $brokerConfiguration = [],
         private ?LoggerInterface    $logger = null,
         private ?LoopInterface      $loop = null,
-        private float               $timeoutSec = 2.0,
+        private float               $timeoutSec = 0.0,
     ) {
         $this->brokerFactory = new BrokerFactory();
 
