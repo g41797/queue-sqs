@@ -7,7 +7,7 @@ jobs:
       matrix:
         php: ["8.2", "8.3"]
     steps:
-      - run: sudo apt-get install libzip-dev
+#      - run: sudo apt-get install libzip-dev
 
       - uses: actions/checkout@v3
 
@@ -16,8 +16,13 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: zip
           tools: composer
+        env:
+          fail-fast: true
 
       - uses: php-actions/composer@v6
+        with:
+          php-version: ${{ matrix.php }}
+          php_extensions: zip
 
       - run: bash docker/start.sh
 
