@@ -62,6 +62,12 @@ class SnippetsTest extends FunctionalTestCase
 
         try {
             $result = $client->listQueues();
+
+            if (count($result) == 0)
+            {
+                return true;
+            }
+
             foreach ($result->get('QueueUrls') as $queueUrl) {
                 $client->purgeQueue(['QueueUrl' => $queueUrl]);
             }

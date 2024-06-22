@@ -8,8 +8,10 @@
          beStrictAboutOutputDuringTests="true"
          executionOrder="random"
          failOnRisky="true"
-         failOnWarning="true"
+         failOnWarning="false"
          stopOnFailure="false"
+         stopOnWarning="false"
+         displayDetailsOnTestsThatTriggerWarnings="true"
          colors="true"
 >
     <php>

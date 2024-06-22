@@ -199,7 +199,7 @@ class Broker implements BrokerInterface
         $this->queue = $sqs->createQueue($this->queueName);
 
         $this->queue->setFifoQueue(true);
-        $this->queue->setReceiveMessageWaitTimeSeconds(20);
+        $this->queue->setReceiveMessageWaitTimeSeconds((int)20);
         $this->queue->setContentBasedDeduplication(true);
 
         $sqs->declareQueue($this->queue);
