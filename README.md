@@ -55,7 +55,7 @@ but this use case was not tested.
 
 [LocalStack](https://www.localstack.cloud/) allows "...develop and test your AWS applications locally to reduce development time...".
 
-Development and testing of queue-sqs was done using LocalStack.
+Development and testing of queue-sqs were done using LocalStack.
 
 ### Credentials
 
