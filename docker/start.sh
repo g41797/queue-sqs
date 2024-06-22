@@ -64,19 +64,8 @@ echo
 pwd
 echo Create Queue
 awslocal sqs create-queue --queue-name test-queue.fifo --attributes FifoQueue=true,ContentBasedDeduplication=true
-echo List Queues
-awslocal sqs list-queues
-echo Send Messages
-awslocal sqs send-message --queue-url "http://localhost.localstack.cloud:4566/queue/us-east-1/000000000000/test-queue.fifo" --message-body "12345678901" --message-group-id jobs
-awslocal sqs send-message --queue-url "http://localhost.localstack.cloud:4566/queue/us-east-1/000000000000/test-queue.fifo" --message-body "12345678902" --message-group-id jobs
-echo Receive Message
-awslocal sqs receive-message --queue-url "http://localhost.localstack.cloud:4566/queue/us-east-1/000000000000/test-queue.fifo" --attribute-names All --message-attribute-names All --max-number-of-messages 1
-echo Purge Queue
-awslocal sqs purge-queue --queue-url "http://localhost.localstack.cloud:4566/queue/us-east-1/000000000000/test-queue.fifo"
 echo Delete Queue
 awslocal sqs delete-queue --queue-url "http://localhost.localstack.cloud:4566/queue/us-east-1/000000000000/test-queue.fifo"
-echo List Queues
-awslocal sqs list-queues
 
 date
 pwd
