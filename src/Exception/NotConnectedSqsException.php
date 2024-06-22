@@ -10,12 +10,12 @@ class NotConnectedSqsException extends \RuntimeException implements FriendlyExce
 {
     public function getName(): string
     {
-        return 'Not connected to Pulsar.';
+        return 'Not connected to SQS.';
     }
 
     public function getSolution(): ?string
     {
-        return 'Check your Pulsar configuration.';
+        return 'Check your SQS configuration.';
     }
 }
 
